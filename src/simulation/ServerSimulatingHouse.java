@@ -68,7 +68,7 @@ public class ServerSimulatingHouse {
 						  this.final_decision.setPowerToTransfer(Float.parseFloat(power));
 						  
 						  // update our own serversinfo object
-						  System.out.println("call to update as it is source");
+						  //System.out.println("call to update as it is source");
 						  updateInformation();
 						  broadCastState("final transfer information");
 					  }
@@ -80,7 +80,7 @@ public class ServerSimulatingHouse {
 						  System.out.println("Power - "+power+" has been received from "+sourceId);
 						  
 						  // update our own serversinfo object
-						  System.out.println("call to update as it is destination");
+						  //System.out.println("call to update as it is destination");
 						  updateInformation();
 						  //broadCastState("final transfer information");
 						  this.final_decision.setPowerToTransfer(Float.parseFloat("0"));
@@ -101,12 +101,12 @@ public class ServerSimulatingHouse {
 			  {
 				  if(this.serverId!=Integer.parseInt(finaldestinationId) && this.serverId!=Integer.parseInt(finalsourceId))
 				  {
-				  System.out.println("updating final_decision values "+finalsourceId+" "+finaldestinationId+" "+finalpower);
+				  //System.out.println("updating final_decision values "+finalsourceId+" "+finaldestinationId+" "+finalpower);
 				  this.final_decision.setDestinationServerId(finaldestinationId);
 				  this.final_decision.setSourceServerId(finalsourceId);
 				  this.final_decision.setPowerToTransfer(Float.parseFloat(finalpower));
 				  // update our own serverinfo object
-				  System.out.println("call to update as a spectator");
+				  //System.out.println("call to update as a spectator");
 				  updateInformation();
 				  this.final_decision.setPowerToTransfer(Float.parseFloat("0"));
 				  this.final_decision.setDestinationServerId("");
@@ -239,7 +239,7 @@ public class ServerSimulatingHouse {
 	// function to update information after power has been transferred
 	public void updateInformation()
 	{
-		System.out.println("removing from deficit and exccess Servers list "+final_decision.DestinationServerId+" "+final_decision.SourceServerId);
+		//System.out.println("removing from deficit and exccess Servers list "+final_decision.DestinationServerId+" "+final_decision.SourceServerId);
 		// need to update the excess and deficit servers lists
 		if(this.deficitServers.containsKey(final_decision.DestinationServerId))
 		{
@@ -260,7 +260,7 @@ public class ServerSimulatingHouse {
 			}
 		}
 		
-		System.out.println("updating serversInfo for "+final_decision.DestinationServerId+" and "+final_decision.SourceServerId);
+		//System.out.println("updating serversInfo for "+final_decision.DestinationServerId+" and "+final_decision.SourceServerId);
 		//update the serversInfo list maintained by this server
 		for (String serverId : this.serversInfo.keySet()) {
 				  //Decreasing the power generated as some of the power has been transferred
@@ -279,7 +279,7 @@ public class ServerSimulatingHouse {
 	// function that monitors the state of all servers and makes a decision if there is a power deficit and power excess
 	public void checkServersState() throws IOException
 	{
-		  System.out.println("checking server state");
+		  //System.out.println("checking server state");
 		  Iterator<Entry<String, HouseProperties>> iterator_serversInfo = this.serversInfo.entrySet().iterator();
 		  
 		  // if at least 3 other house servers Info is received 
@@ -322,8 +322,8 @@ public class ServerSimulatingHouse {
 					  while(iterator_excessInfo.hasNext())
 					  {
 						  Map.Entry<String, Float> excessTuple = (Map.Entry<String, Float>) iterator_excessInfo.next();
-						  System.out.println("excess tuple value is less "+excessTuple.getValue()+" than "+ Math.abs(deficitTuple.getValue()));
-						  if(excessTuple.getValue() > Math.abs(deficitTuple.getValue()))
+						  //System.out.println("excess tuple value is less "+excessTuple.getValue()+" than "+ Math.abs(deficitTuple.getValue()));
+						  if(excessTuple.getValue() >= Math.abs(deficitTuple.getValue()))
 						  {
 							  if(decision.getSourceServerId().equals(""))
 							  {
@@ -334,7 +334,7 @@ public class ServerSimulatingHouse {
 							  else
 							  {
 								System.out.println("Getting distance between "+excessTuple.getKey()+" and "+deficitTuple.getKey()+"; and distance between "+ decision.SourceServerId +" and "+ deficitTuple.getKey());
-								if(getDistance(excessTuple.getKey(),deficitTuple.getKey()) < getDistance(decision.getSourceServerId(), deficitTuple.getKey()))
+								if(getDistance(excessTuple.getKey(),deficitTuple.getKey()) <= getDistance(decision.getSourceServerId(), deficitTuple.getKey()))
 								{
 									decision.setPowerToTransfer(Math.abs(deficitTuple.getValue()));
 									decision.setSourceServerId(excessTuple.getKey());
@@ -344,7 +344,7 @@ public class ServerSimulatingHouse {
 						  }
 						  else
 						  {
-							  //System.out.println("excess tuple value is less "+excessTuple.getValue());
+							  System.out.println("excess tuple value is less "+excessTuple.getValue());
 							  if(sum < Math.abs(deficitTuple.getValue()))
 							  {
 							  sum = sum + excessTuple.getValue();
@@ -360,7 +360,7 @@ public class ServerSimulatingHouse {
 						  }
 						  else if(sum!= 0.0 && sum >= Math.abs(deficitTuple.getValue()))
 						  {
-							System.out.println("Type is set to multiple senders");
+							//System.out.println("Type is set to multiple senders");
 							this.multi_decision.setDestinationServerId(deficitTuple.getKey());
 							this.multi_decision.setPowerToTransfer(sum);
 							this.multi_decision.setSourceServerId("multiple");
